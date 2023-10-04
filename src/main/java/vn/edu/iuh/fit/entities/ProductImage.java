@@ -1,30 +1,36 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 
 @Entity()
 @Table(name = "product_image")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "image_id")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class ProductImage implements Serializable {
     @Id
     @Column(name = "image_id",columnDefinition = "bigint(20)")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("image_id")
     private long image_id;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
+    @JsonProperty("product")
     private Product product;
     @Column(columnDefinition = "nvarchar(250)")
+    @JsonProperty("alternative")
     private String alternative;
     @Column(columnDefinition = "nvarchar(250)")
+    @JsonProperty("path")
     private String path;
 
 
 
-    public ProductImage(long image_id, String alternative, String path, Product product) {
-        this.image_id = image_id;
+    public ProductImage(String alternative, String path, Product product) {
         this.alternative = alternative;
         this.path = path;
         this.product = product;

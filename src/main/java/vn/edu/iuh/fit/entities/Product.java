@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import vn.edu.iuh.fit.enums.ProductStatus;
 
@@ -9,27 +10,37 @@ import java.util.List;
 
 @Entity
 @Table(name = "product")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "productId")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class Product implements Serializable {
     @Id
     @Column(name = "product_id", columnDefinition = "bigint(20)")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("productId")
     private long productId;
     @Column(columnDefinition = "nvarchar(250)")
+    @JsonProperty("description")
     private String description;
     @Column(columnDefinition = "nvarchar(100)")
+    @JsonProperty("manufacturer")
     private String manufacturer;
     @Column(columnDefinition = "nvarchar(100)")
+    @JsonProperty("name")
     private String name;
     @Column(columnDefinition = "int(11)")
+    @JsonProperty("status")
     private ProductStatus status;
     @Column(columnDefinition = "nvarchar(25)")
+    @JsonProperty("unit")
     private String unit;
 
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<ProductImage> productImageList = new ArrayList<>();
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<OrderDetail> orderDetailList = new ArrayList<>();
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<ProductPrice> productPriceList=new ArrayList<>();
     public Product(long productId, String description, String manufacturer, String name, ProductStatus status, String unit) {
         this.productId = productId;

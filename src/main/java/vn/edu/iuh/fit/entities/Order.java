@@ -1,5 +1,10 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -16,15 +21,19 @@ public class Order implements Serializable {
     private long order_id;
 
     @Column(columnDefinition = "datetime(6)")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate orderDate;
     @ManyToOne
     @JoinColumn(name = "cus_id")
+    @JsonIgnore
     private Customer customer;
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<OrderDetail> orderDetailList = new ArrayList<OrderDetail>();
 
     public Order( LocalDate orderDate, Customer customer, Employee employee) {

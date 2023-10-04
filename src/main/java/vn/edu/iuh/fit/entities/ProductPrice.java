@@ -1,15 +1,22 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity(name = "product_price")
 public class ProductPrice implements Serializable {
     @Id
     @Column(name = "price_date_time", columnDefinition = "datetime(6)")
-    private LocalDateTime priceDateTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate priceDateTime;
 
     @Column(columnDefinition = "nvarchar(255)")
     private String note;
@@ -18,9 +25,10 @@ public class ProductPrice implements Serializable {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id",columnDefinition = "bigint(20)")
+    @JsonBackReference
     private Product product;
 
-    public ProductPrice(LocalDateTime priceDateTime, String note, double price, Product product) {
+    public ProductPrice(LocalDate priceDateTime, String note, double price, Product product) {
         this.priceDateTime = priceDateTime;
         this.note = note;
         this.price = price;
@@ -30,11 +38,11 @@ public class ProductPrice implements Serializable {
     public ProductPrice() {
     }
 
-    public LocalDateTime getPriceDateTime() {
+    public LocalDate getPriceDateTime() {
         return priceDateTime;
     }
 
-    public void setPriceDateTime(LocalDateTime priceDateTime) {
+    public void setPriceDateTime(LocalDate priceDateTime) {
         this.priceDateTime = priceDateTime;
     }
 

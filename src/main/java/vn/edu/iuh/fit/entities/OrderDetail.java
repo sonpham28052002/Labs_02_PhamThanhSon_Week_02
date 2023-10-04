@@ -1,5 +1,7 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -11,11 +13,13 @@ public class OrderDetail implements Serializable {
     @Id
     @JoinColumn(name = "order_id")
     @ManyToOne
+    @JsonBackReference
     private Order order;
 
     @Id
     @JoinColumn(name = "product_id")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Product product;
 
 

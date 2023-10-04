@@ -1,19 +1,26 @@
 package vn.edu.iuh.fit.WebResources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import vn.edu.iuh.fit.entities.Employee;
+import vn.edu.iuh.fit.convertes.JacksonConfigMapper;
 import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.reponsitories.OrderReponsitory;
 
 @Path("/order")
 public class OrderResource {
-    private OrderReponsitory orderReponsitory = new OrderReponsitory();
+    private final OrderReponsitory orderReponsitory = new OrderReponsitory();
+    private final JacksonConfigMapper jacksonConfigMapper = new JacksonConfigMapper();
 
     @GET
     @Produces("application/json")
     public Response getAll(){
-        return Response.ok(orderReponsitory.getAll()).build();
+        try {
+            String a = jacksonConfigMapper.getContext(Order.class).writeValueAsString(orderReponsitory.getAll());
+            return Response.ok(a).build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
     @GET
     @Path("/{id}")
@@ -21,7 +28,12 @@ public class OrderResource {
     public Response get(@PathParam("id") long ids){
         Order order = orderReponsitory.getOne(ids);
         if (order != null){
-            return Response.ok(order).build();
+            try {
+                String json = jacksonConfigMapper.getContext(Order.class).writeValueAsString(order);
+                return Response.ok(json).build();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -33,6 +45,7 @@ public class OrderResource {
         orderReponsitory.insertOrder(order);
         return  Response.ok(order).build();
     }
+
     @PUT
     @Path("/{ids}")
     @Produces("application/json")
@@ -53,4 +66,5 @@ public class OrderResource {
         }
         return Response.status(Response.Status.NOT_FOUND).build();
     }
+
 }

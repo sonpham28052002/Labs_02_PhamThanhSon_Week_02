@@ -1,17 +1,18 @@
 package vn.edu.iuh.fit.WebResources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import vn.edu.iuh.fit.convertes.JacksonConfigMapper;
 import vn.edu.iuh.fit.entities.ProductImage;
 import vn.edu.iuh.fit.reponsitories.ProductImageReponsitory;
 
 @Path("/product_image")
 public class ProductImageResource {
-    private ProductImageReponsitory productImageReponsitory ;
-
-    public ProductImageResource() {
-        productImageReponsitory = new ProductImageReponsitory();
-    }
+    private final ProductImageReponsitory productImageReponsitory = new ProductImageReponsitory();
+    private final JacksonConfigMapper jacksonConfigMapper = new JacksonConfigMapper();
 
     @GET
     @Path("/{id}")
@@ -19,7 +20,14 @@ public class ProductImageResource {
     public Response getProductImageByID(@PathParam("id") long ids){
         ProductImage productImage = productImageReponsitory.getOne(ids);
         if (productImage != null){
-            return Response.ok(productImage).build();
+            try {
+                String json = jacksonConfigMapper.getContext(ProductImage.class)
+                        .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false)
+                        .writeValueAsString(productImage);
+                return Response.ok(json).build();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -38,6 +46,7 @@ public class ProductImageResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response insert(ProductImage productImage){
+        System.out.println(productImage);
         productImageReponsitory.insertProductImage(productImage);
         return  Response.ok(productImage).build();
     }
@@ -55,10 +64,12 @@ public class ProductImageResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response update(@PathParam("ids") long id, ProductImage productImage){
-        productImage.setImage_id(id);
-        if (productImageReponsitory.updateProductImage(productImage)){
-            return Response.ok(productImage).build();
-        }
+//        productImage.setImage_id(id);
+//        if (productImageReponsitory.updateProductImage(productImage)){
+//            return Response.ok(productImage).build();
+//        }
+        System.out.println(productImage.getAlternative());
+        System.out.println(productImage.getPath());
         return Response.ok().build();
     }
 }

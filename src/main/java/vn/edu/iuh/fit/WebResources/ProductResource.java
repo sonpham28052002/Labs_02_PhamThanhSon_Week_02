@@ -1,9 +1,11 @@
 package vn.edu.iuh.fit.WebResources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.persistence.EntityTransaction;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import vn.edu.iuh.fit.ConectionDB.ConnectionDB;
+import vn.edu.iuh.fit.convertes.JacksonConfigMapper;
 import vn.edu.iuh.fit.entities.*;
 import vn.edu.iuh.fit.enums.EmployeeStatus;
 import vn.edu.iuh.fit.reponsitories.CustomerReponsitory;
@@ -17,24 +19,37 @@ import java.util.List;
 @Path("/product")
 public class ProductResource{
     private final ProductReponsitory productReponsitory;
-
+    private final JacksonConfigMapper jacksonConfigMapper = new JacksonConfigMapper();
+    
     public ProductResource() {
         productReponsitory = new ProductReponsitory();
     }
     @GET
     @Path("/{id}")
     @Produces("application/json")
-    public Response get(@PathParam("id") long ids){
+    public Response get(@PathParam("id") long ids) {
         Product product = productReponsitory.getOne(ids);
         if (product != null){
-            return Response.ok(product).build();
+            try {
+                String json = jacksonConfigMapper.getContext(Product.class).writeValueAsString(product);
+                return Response.ok(json).build();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
     @GET
     @Produces("application/json")
     public Response getAll(){
-        return Response.ok(productReponsitory.getAll()).build();
+        EntityTransaction transaction = ConnectionDB.getConnectionDB().getManagerFactory().createEntityManager().getTransaction();
+        transaction.begin();
+        try {
+            String json = jacksonConfigMapper.getContext(Product.class).writeValueAsString(productReponsitory.getAll());
+            return Response.ok(json).build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @POST

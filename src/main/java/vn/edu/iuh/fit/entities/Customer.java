@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public class Customer implements Serializable {
     private String phone;
 
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Order> orderList = new ArrayList<>();
     public Customer() {
     }

@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import jakarta.persistence.*;
@@ -33,6 +34,7 @@ public class Employee implements Serializable {
     @Column(columnDefinition = "int(11)")
     private EmployeeStatus status;
     @OneToMany(mappedBy = "employee")
+    @JsonIgnore
     private List<Order> orderList= new ArrayList<Order>();
 
     public Employee() {

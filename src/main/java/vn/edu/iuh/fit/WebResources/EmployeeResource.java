@@ -1,27 +1,41 @@
 package vn.edu.iuh.fit.WebResources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import vn.edu.iuh.fit.convertes.JacksonConfigMapper;
 import vn.edu.iuh.fit.entities.Employee;
 import vn.edu.iuh.fit.reponsitories.EmployeeReponsitory;
 
 @Path("/employee")
 public class EmployeeResource {
     private final EmployeeReponsitory employeeReponsitory = new EmployeeReponsitory();
+    private final JacksonConfigMapper jacksonConfigMapper = new JacksonConfigMapper();
+
     @GET
     @Path("/{id}")
     @Produces("application/json")
     public Response getEmployee(@PathParam("id") long ids){
         Employee employee = employeeReponsitory.getOne(ids);
         if (employee != null){
-            return Response.ok(employee).build();
+            try {
+                String json = jacksonConfigMapper.getContext(Employee.class).writeValueAsString(employee);
+                return Response.ok(json).build();
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
     @GET
     @Produces("application/json")
     public Response getAll(){
-        return Response.ok(employeeReponsitory.getAllEmplyees()).build();
+        try {
+            String json = jacksonConfigMapper.getContext(Employee.class).writeValueAsString(employeeReponsitory.getAllEmplyees());
+            return Response.ok(json).build();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PUT
@@ -40,17 +54,16 @@ public class EmployeeResource {
     @Produces("application/json")
     @Consumes("application/json")
     public Response insert(Employee employee){
-        employeeReponsitory.insertEmployee(employee);
-        return  Response.ok(employee).build();
+        return  Response.ok(employeeReponsitory.insertEmployee(employee)).build();
     }
 
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") long ids){
         if (employeeReponsitory.deleteEmployee(employeeReponsitory.getOne(ids))){
-            return Response.ok().build();
+            return Response.ok(true).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.ok(false).build();
     }
 
 }
