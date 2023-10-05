@@ -16,27 +16,74 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script>
-        axios({
-            method: 'get',
-            url: 'http://localhost:8080/phamthanhson/api/product',
-        })
-            .then(function (response) {
-                console.log(response.data);
-            });
+        var cart = []
+        localStorage.setItem("cart","");
+        $(document).ready(function () {
 
+            getProduct()
+        })
+        var getProduct = () => {
+            var data;
+            axios({
+                method: 'get',
+                url: 'http://localhost:8080/phamthanhson/api/product',
+            })
+                .then(function (response) {
+                    let body = document.getElementById("body_Product")
+                    let renderJson = "";
+                    for (let x of response.data) {
+                        renderJson += renderTableProduct(x)
+                    }
+                    body.innerHTML = renderJson;
+                });
+
+        }
+
+        var renderTableProduct = (x) => {
+            return "<tr>" +
+                " <th scope='row'>" + x.productId + "</th>" +
+                "<td>" + x.name + "</td>" +
+                "<td>" + x.description + "</td>" +
+                "<td>" + x.manufacturer + "</td>" +
+                "<td>" + x.unit + "</td>" +
+                "<td>" + x.status + "</td>" +
+                "<td>" +
+                " <img src='" + x.productImageList[0].path + "' style='width: 100px; height: auto'/>" +
+                "  </td>" +
+                "<td >" +
+                "<button type='button' style='margin-top: 10px'  class='btn btn-success' value='" + x + "'>Update</button>" +
+                "</td>" +
+                "<td>" +
+                "<button type='button' style='margin-top: 10px' class='btn btn-danger' value='" + x.productId + "' onclick='deleteCookie()'>Delete</button>" +
+                " </td>" +
+                "<td >" +
+                "<button type='button' style='margin-top: 10px' class='btn btn-success' id='" + x.productId + "' onclick='pushProductToCart(id)'>Thêm giỏ Hàng</button>" +
+                " </td>" +
+                "</tr>"
+        }
+        var pushProductToCart = (id) => {
+            if (!cart.includes(id)) {
+                cart.push(id)
+                localStorage.setItem("cart", cart);
+                console.log(localStorage.getItem("cart"))
+                console.log(cart)
+            }
+        }
     </script>
 </head>
 <body>
 <h1 style="text-align: center">Danh Sách Sản Phẩm</h1>
 <div style="display: flex; justify-content: center; align-items: center">
     <button type="button" class="btn-danger">+ Thêm Sản Phẩm Mới</button>
+    <a href="a.jsp">a</a>
 </div>
 <div class="container" style="margin-top: 40px">
     <table class="table table-hover table-bordered">
         <thead class="thead-dark">
-        <tr style="background-color: aqua">
+        <tr style="background-color: aqua ">
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">description</th>
@@ -46,31 +93,11 @@
             <th scope="col">Image</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
-        <tbody>
-        <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>Otto</td>
-            <td>Otto</td>
-            <td>Otto</td>
-            <td style="text-align: center;">
-                <img
-                        src="https://getbootstrap.com/docs/4.1/assets/img/bootstrap-stack.png"
-                        alt=""
-                        srcset=""
-                        style="width: 100px; height: auto"
-                />
-            </td>
-            <td style="text-align: center;">
-                <button type="button" class="btn btn-success">Update</button>
-            </td>
-            <td style="text-align: center;">
-                <button type="button" class="btn btn-danger">Delete</button>
-            </td>
-        </tr>
+        <tbody id="body_Product">
+
         </tbody>
     </table>
 </div>
