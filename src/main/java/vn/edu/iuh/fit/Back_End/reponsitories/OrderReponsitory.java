@@ -98,5 +98,18 @@ public class OrderReponsitory {
         }
         return null;
     }
+    public Order getOrderLast(){
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        try {
+            List<Order> list =entityManager.createQuery("select od from Order od",Order.class).getResultList();
+            transaction.commit();
+            return list.get(list.size()-1);
+        }catch (Exception exception){
+            exception.printStackTrace();
+            transaction.rollback();
+        }
+        return null;
+    }
 
 }

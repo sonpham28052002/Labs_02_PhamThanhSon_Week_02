@@ -21,7 +21,7 @@ public class ProductReponsitory {
         EntityTransaction transaction = entityManager.getTransaction();
         transaction.begin();
         try {
-            List<Product> customerList=entityManager.createQuery("select pr from Product pr",Product.class).getResultList();
+            List<Product> customerList=entityManager.createQuery("select pr from Product pr where pr.status = 1",Product.class).getResultList();
             transaction.commit();
             return  customerList;
         }catch (Exception exception){

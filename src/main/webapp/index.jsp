@@ -66,10 +66,11 @@
         }
         var pushProductToCart = (id) => {
             if (!cart.includes(id)) {
-                cart.push(id)
+                var a = prompt("nhập số lượng cần")
+                console.log(a)
+                cart.push(id+"-"+a)
                 localStorage.setItem("cart", cart);
-                console.log(localStorage.getItem("cart"))
-                console.log(cart)
+                document.getElementById("giohang").value = cart
             }
         }
     </script>
@@ -78,7 +79,12 @@
 <h1 style="text-align: center">Danh Sách Sản Phẩm</h1>
 <div style="display: flex; justify-content: center; align-items: center">
     <button type="button" class="btn-danger">+ Thêm Sản Phẩm Mới</button>
-    <a href="a.jsp">a</a>
+    <form action="Controller" method="post">
+        <button type="submit" id="giohang" name="giohang" class="btn-success">Giỏ hàng</button>
+    </form>
+    <form action="Controller" method="post">
+    <button type="submit" id="" name="thongke" class="btn-success">Thống Kê</button>
+</form>
 </div>
 <div class="container" style="margin-top: 40px">
     <table class="table table-hover table-bordered">
