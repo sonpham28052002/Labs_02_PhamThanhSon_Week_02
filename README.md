@@ -51,13 +51,13 @@
     </ul>
   </li>
 </ul>
-<H3>Show all product</H3>
+<H3>-4: Show all product</H3>
         <img src="https://github.com/sonpham28052002/Labs_02_PhamThanhSon_Week_02/assets/84237256/b8179207-dd1b-409e-b161-a24a78258f88">
-<h3>- khách hàng nhập số lượng </h3>
+<h3>-5: khách hàng nhập số lượng </h3>
         <img src="https://github.com/sonpham28052002/Labs_02_PhamThanhSon_Week_02/assets/84237256/48e7a348-96fc-4e06-a6a8-ed628d6bcd2c">
-<h3>- Thanh Toán khi thanh toán xong hệ thổng trở lại trang sản phẩm</h3>
+<h3>-6: Thanh Toán khi thanh toán xong hệ thổng trở lại trang sản phẩm</h3>
         <img src="https://github.com/sonpham28052002/Labs_02_PhamThanhSon_Week_02/assets/84237256/18293a2d-632b-4fb1-86bf-d31378049189">
-<h3>- Thống kê (Mẫu): </h3>
+<h3>-7: Thống kê (Mẫu): </h3>
         <img src="https://github.com/sonpham28052002/Labs_02_PhamThanhSon_Week_02/assets/84237256/2329d830-55b0-49be-a9e9-05c832f73261">
         <img src="https://github.com/sonpham28052002/Labs_02_PhamThanhSon_Week_02/assets/84237256/4fe1905b-5b5d-4ed2-80e9-a7c7fc5fc515">
 
